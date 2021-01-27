@@ -23,12 +23,9 @@ func index(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	var wg sync.WaitGroup
-	wg.Add(2)
 	log.Println("Listening on :80...")
 	http.HandleFunc("/", index)
 	http.ListenAndServe(":80", nil)
-	wg.Wait()
 }
 
 // ISSData ...
