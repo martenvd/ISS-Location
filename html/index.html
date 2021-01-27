@@ -7,9 +7,14 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
     integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
     crossorigin=""></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
     <div id="mapid" style="height: 60em !important;"></div>
+    <div>
+        <input id="latitude" type="hidden" value="{{ .IssPosition.Latitude }}"/>
+        <input id="longitude" type="hidden" value="{{ .IssPosition.Longitude }}"/>
+    </div>
     <script>
         var latitude = parseFloat("{{ .IssPosition.Latitude }}");
         var longitude = parseFloat("{{ .IssPosition.Longitude }}");
@@ -23,6 +28,24 @@
             accessToken: '******************' // Fill in your own mapbox API key
         }).addTo(mymap);
         var marker = L.marker([latitude, longitude]).addTo(mymap);
+
+        window.addEventListener("load", function() { updateMap(); });
+
+        function getMarker(newLatitude, newLongitude) {
+            mymap.removeLayer(marker)
+            marker = L.marker([newLatitude, newLongitude]).addTo(mymap);
+        }
+
+        
+        function updateMap() {
+            $.get( "../main.go", function( data ) {
+                var fullHTML = $($.parseHTML(data));
+                var newLatitude = fullHTML.find('#latitude').val();
+                var newLongitude = fullHTML.find('#longitude').val();
+                getMarker(newLatitude, newLongitude);
+            });
+            setTimeout(function(){ updateMap(); }, 2000);
+        }
     </script>
 </body>
 </html>

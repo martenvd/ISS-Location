@@ -11,15 +11,15 @@ import (
 )
 
 var tpl *template.Template
-var currenPosition ISSData
+var currentPosition ISSData
 
 func init() {
 	tpl = template.Must(template.ParseGlob("html/*"))
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
-	currenPosition = getCurrentISSLocation()
-	tpl.ExecuteTemplate(w, "index.html", currenPosition)
+	currentPosition = getCurrentISSLocation()
+	tpl.ExecuteTemplate(w, "index.html", currentPosition)
 }
 
 func main() {
